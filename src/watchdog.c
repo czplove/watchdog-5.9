@@ -282,7 +282,7 @@ static void read_config(char *configfile, char *progname)
 	exit(1);
     }
 
-    while (!feof(wc)) {
+    while (!feof(wc)) {	//-如果文件结束，则返回非0值，否则返回0
 	char *line = NULL;
 	size_t n;
 
@@ -514,7 +514,7 @@ int main(int argc, char *const argv[])
     };
 #endif				/* USE_SYSLOG */
 
-    progname = basename(argv[0]);
+    progname = basename(argv[0]);	//-返回路径中的文件名部分
 
     /* check the options */
     /* there aren't that many any more */
