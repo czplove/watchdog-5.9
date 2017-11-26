@@ -1,4 +1,4 @@
-/* $Header: /cvsroot/watchdog/watchdog/src/memory.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
+﻿/* $Header: /cvsroot/watchdog/watchdog/src/memory.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -19,7 +19,7 @@
 #define FREEMEM		"MemFree:"
 #define FREESWAP	"SwapFree:"
 
-int check_memory(void)
+int check_memory(void)	//-机器的内存使用信息,对信息进行检测并记录到系统日志
 {
     char buf[1024], *ptr1, *ptr2;
     unsigned int free;
@@ -29,7 +29,7 @@ int check_memory(void)
 	return (ENOERR);
 
     /* position pointer at start of file */
-    if (lseek(mem, 0, SEEK_SET) < 0) {
+    if (lseek(mem, 0, SEEK_SET) < 0) {	//-定位到文件开始,应该是为了可靠处理的
 	int err = errno;
 
 #if USE_SYSLOG
@@ -58,8 +58,8 @@ int check_memory(void)
 	return (ENOERR);
     }
     
-    ptr1 = strstr(buf, FREEMEM);
-    ptr2 = strstr(buf, FREESWAP);
+    ptr1 = strstr(buf, FREEMEM);	//-LowFree与HighFree的总和，被系统留着未使用的内存
+    ptr2 = strstr(buf, FREESWAP);	//-未被使用交换空间的大小
     
     if (!ptr1 || !ptr2) {
 #if USE_SYSLOG
@@ -74,7 +74,7 @@ int check_memory(void)
     }
 
     /* we only care about integer values */
-    free = atoi(ptr1+strlen(FREEMEM)) + atoi(ptr2+strlen(FREESWAP));
+    free = atoi(ptr1+strlen(FREEMEM)) + atoi(ptr2+strlen(FREESWAP));	//-计算出系统的总值
 
 #if USE_SYSLOG
     if (verbose && logtick && ticker == 1)

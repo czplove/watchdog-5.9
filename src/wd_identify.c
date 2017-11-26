@@ -1,4 +1,4 @@
-/*************************************************************/
+﻿/*************************************************************/
 /* Small utility to identify hardware watchdog               */
 /* 							     */
 /* Idea and most of the implementation by		     */
@@ -33,10 +33,10 @@ static void usage(void)
     exit(1);
 }
 
-void terminate(void)
+void terminate(void)	//-终端
 {
 	if (watchdog != -1) {
-	    if (write(watchdog, "V", 1) < 0 )
+	    if (write(watchdog, "V", 1) < 0 )	//-关闭看门狗
 		perror(progname);
 
 	    if (close(watchdog) == -1)
@@ -46,19 +46,19 @@ void terminate(void)
 	exit(0);
 }
 
-static int spool(char *line, int *i, int offset)
+static int spool(char *line, int *i, int offset)	//-找到需要的位置
 {
-    for ( (*i) += offset; line[*i] == ' ' || line[*i] == '\t'; (*i)++ );
+    for ( (*i) += offset; line[*i] == ' ' || line[*i] == '\t'; (*i)++ );	//-去掉空格
     if ( line[*i] == '=' )
         (*i)++;
-    for ( ; line[*i] == ' ' || line[*i] == '\t'; (*i)++ );
+    for ( ; line[*i] == ' ' || line[*i] == '\t'; (*i)++ );	//-再次去掉空格
     if ( line[*i] == '\0' )
         return(1);
     else
         return(0);
 }
 
-static void read_config(char *configfile, char *progname)
+static void read_config(char *configfile, char *progname)	//-读指定配置文件中指定的选项参数
 {
     FILE *wc;
 
@@ -67,11 +67,11 @@ static void read_config(char *configfile, char *progname)
         exit(1);
     }
 
-    while ( !feof(wc) ) {
+    while ( !feof(wc) ) {	//-读文件内容直到结束
 	char *line = NULL;
 	size_t n;
 
-	if (getline(&line, &n, wc) == -1) {
+	if (getline(&line, &n, wc) == -1) {	//-读取整行文本
             if ( !ferror(wc) )
                 break;
             else {
@@ -99,11 +99,11 @@ static void read_config(char *configfile, char *progname)
                 continue;
 
             /* now check for an option */
-            if ( strncmp(line + i, DEVICE, strlen(DEVICE)) == 0 ) {
+            if ( strncmp(line + i, DEVICE, strlen(DEVICE)) == 0 ) {	//-若str1与str2的前n个字符相同，则返回0
                 if ( spool(line, &i, strlen(DEVICE)) )
                     devname = NULL;
                 else
-                    devname = strdup(line + i);
+                    devname = strdup(line + i);	//-将字符串拷贝到新建的位置处(在内部调用了malloc()为变量分配内存)
 	    } 
             else {
                 /*
@@ -123,7 +123,7 @@ static void read_config(char *configfile, char *progname)
 }
 
 
-int main(int argc, char *const argv[])
+int main(int argc, char *const argv[])	//-主要根据配置文件识别了看门狗,并没有实际周期操作
 {
     FILE *fp;
     char *configfile = CONFIG_FILENAME;
@@ -138,7 +138,7 @@ int main(int argc, char *const argv[])
 	{NULL, 0, NULL, 0}
     };
 
-    progname = basename(argv[0]);
+    progname = basename(argv[0]);	//-获取文件名
 
     /* check for the one option we understand */
     while ((c = getopt_long(argc, argv, opts, long_options, NULL)) != EOF) {
@@ -161,14 +161,14 @@ int main(int argc, char *const argv[])
 	exit(0);
 
     /* open the device */
-    watchdog = open(devname, O_WRONLY);
+    watchdog = open(devname, O_WRONLY);	//-打开看门狗设备,这个名字可以通过配置文件变化
     if ( watchdog == -1 ) {
             perror(progname);
             exit(1);
     }
 
     /* Print watchdog identity */
-    if (ioctl(watchdog, WDIOC_GETSUPPORT, &ident) < 0) {
+    if (ioctl(watchdog, WDIOC_GETSUPPORT, &ident) < 0) {	//-读板卡信息
 	perror(progname);
     }
     else {
@@ -176,7 +176,7 @@ int main(int argc, char *const argv[])
 	printf("%s\n", ident.identity);
     }
 
-    if (write(watchdog, "V", 1) < 0 )
+    if (write(watchdog, "V", 1) < 0 )	//-关闭看门狗
 	perror(progname);
 
     if (close(watchdog) == -1)

@@ -1,4 +1,4 @@
-/* $Header: /cvsroot/watchdog/watchdog/src/watchdog.c,v 1.5 2009/02/25 09:38:18 meskes Exp $ */
+﻿/* $Header: /cvsroot/watchdog/watchdog/src/watchdog.c,v 1.5 2009/02/25 09:38:18 meskes Exp $ */
 
 /*************************************************************/
 /* Original version was an example in the kernel source tree */
@@ -110,7 +110,7 @@ static void usage(void)
 static int sync_system(int sync_it)
 {
     if (sync_it) {
-	sync();
+	sync();	//-迫使缓冲块数据立即写盘并更新超级块。
 	sync();
     }
     return (0);
@@ -282,7 +282,7 @@ static void read_config(char *configfile, char *progname)
 	exit(1);
     }
 
-    while (!feof(wc)) {	//-����ļ��������򷵻ط�0ֵ�����򷵻�0
+    while (!feof(wc)) {	//-如果文件结束，则返回非0值，否则返回0
 	char *line = NULL;
 	size_t n;
 
@@ -514,7 +514,7 @@ int main(int argc, char *const argv[])
     };
 #endif				/* USE_SYSLOG */
 
-    progname = basename(argv[0]);	//-����·���е��ļ�������
+    progname = basename(argv[0]);	//-返回路径中的文件名部分
 
     /* check the options */
     /* there aren't that many any more */
@@ -564,7 +564,7 @@ int main(int argc, char *const argv[])
     if (tint < 0)
 	usage();
 
-    if (tint >= devtimeout && !force) {
+    if (tint >= devtimeout && !force) {	//-配置的参数不能大于最大值否则出错
 	fprintf(stderr, "%s error:\n", progname);
 	fprintf(stderr, "This interval length might reboot the system while the process sleeps!\n");
 	fprintf(stderr, "To force this interval length use the -f option.\n");

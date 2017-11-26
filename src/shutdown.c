@@ -1,4 +1,4 @@
-/* $Header: /cvsroot/watchdog/watchdog/src/shutdown.c,v 1.5 2009/02/11 14:01:05 meskes Exp $ */
+﻿/* $Header: /cvsroot/watchdog/watchdog/src/shutdown.c,v 1.5 2009/02/11 14:01:05 meskes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"

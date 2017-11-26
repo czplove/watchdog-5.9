@@ -1,4 +1,4 @@
-sbin_PROGRAMS = watchdog wd_keepalive wd_identify
+﻿sbin_PROGRAMS = watchdog wd_keepalive wd_identify
 
 watchdog_SOURCES = file_stat.c file_table.c fstab.c iface.c ifdown.c keep_alive.c \
 			load.c lomount.c memory.c mntent.c mount.c net.c nfsmount.c \

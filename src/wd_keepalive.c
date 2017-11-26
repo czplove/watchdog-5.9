@@ -1,4 +1,4 @@
-/**********************************************************
+﻿/**********************************************************
  * Copyright:   Appliance Studio Ltd
  * License:	GPL
  *
@@ -31,7 +31,7 @@
 #include <syslog.h>
 
 #include <unistd.h>
-
+//-系统日志/var/log/messages
 #if USE_SYSLOG
 #include <syslog.h>
 #endif         
@@ -65,14 +65,14 @@ static void log_end()
 #if USE_SYSLOG
     /* Log the closing message */
     syslog(LOG_INFO, "stopping watchdog keepalive daemon (%d.%d)", MAJOR_VERSION, MINOR_VERSION);
-    closelog();
+    closelog();	//-用来关闭已打开的system log的连接。
     sleep(5);           /* make sure log is written */
 #endif                          /* USE_SYSLOG */
     return;
 }
 
 /* close the device and check for error */
-static void close_all()
+static void close_all()	//-就是关闭看门狗
 {
 	if (watchdog != -1) {
 		if (write(watchdog, "V", 1) < 0 ) {
@@ -93,12 +93,12 @@ static void close_all()
         }
 }
 
-void sigterm_handler(int arg) {
+void sigterm_handler(int arg) {	//-接收到信号量,准备结束程序
     _running = 0;
 }
 
 /* on exit we close the device and log that we stop */
-void terminate(void) {
+void terminate(void) {	//-接收操作
 #if defined(_POSIX_MEMLOCK)
     if ( realtime == TRUE && mlocked == TRUE ) {
         /* unlock all locked pages */
@@ -116,7 +116,7 @@ void terminate(void) {
     exit(0);
 }
 
-static int spool(char *line, int *i, int offset)
+static int spool(char *line, int *i, int offset)	//-获取需要的值
 {
     for ( (*i) += offset; line[*i] == ' ' || line[*i] == '\t'; (*i)++ );
     if ( line[*i] == '=' )
@@ -128,7 +128,7 @@ static int spool(char *line, int *i, int offset)
         return(0);
 }
 
-static void read_config(char *configfile, char *progname)
+static void read_config(char *configfile, char *progname)	//-通过这个函数发现,这个几个主文件是并列关系,也许有些就是测试目的的
 {
     FILE *wc;
 
@@ -207,7 +207,7 @@ static void read_config(char *configfile, char *progname)
 }
 
 
-int main(int argc, char *const argv[])
+int main(int argc, char *const argv[])	//-这个里面会周期喂狗
 {
     FILE *fp;
     char *configfile = CONFIG_FILENAME;
@@ -277,7 +277,7 @@ int main(int argc, char *const argv[])
     read_config(configfile, progname);
 
     /* make sure we're on the root partition */
-    if ( chdir("/") < 0 ) {
+    if ( chdir("/") < 0 ) {	//-改变当前的工作目录
         perror(progname);
         exit(1);
     }
@@ -292,14 +292,14 @@ int main(int argc, char *const argv[])
 
 #if !defined(DEBUG)
     /* fork to go into the background */
-    if ( (child_pid = fork()) < 0 ) {
+    if ( (child_pid = fork()) < 0 ) {	//-子进程返回0，父进程返回子进程标记；否则，出错返回-1。
         perror(progname);
         exit(1);
     }
     else if ( child_pid > 0 ) {
         /* fork was okay          */
         /* wait for child to exit */
-        if ( waitpid(child_pid, NULL, 0) != child_pid ) {
+        if ( waitpid(child_pid, NULL, 0) != child_pid ) {	//-暂时停止目前进程的执行，直到有信号来到或子进程结束。
             perror(progname);
             exit(1);
         }
@@ -321,7 +321,7 @@ int main(int argc, char *const argv[])
     /* Okay, we're a daemon     */
     /* but we're still attached to the tty */
     /* create our own session */
-    setsid();
+    setsid();	//-调用setsid函数的进程成为新的会话的领头进程，并与其父进程的会话组和进程组脱离。
     /* with USE_SYSLOG we don't do any console IO */
     close(0);
     close(1);
@@ -329,7 +329,7 @@ int main(int argc, char *const argv[])
 #endif				/* !DEBUG */
 
     /* Log the starting message */
-    openlog(progname, LOG_PID, LOG_DAEMON);
+    openlog(progname, LOG_PID, LOG_DAEMON);	//-用于打开系统记录的文件。
     syslog(LOG_INFO, "starting watchdog keepalive daemon (%d.%d):", MAJOR_VERSION, MINOR_VERSION);
     syslog(LOG_INFO, " int=%d alive=%s realtime=%s", tint, devname, realtime ? "yes" : "no");
 #endif                          /* USE_SYSLOG */
@@ -337,10 +337,10 @@ int main(int argc, char *const argv[])
     /* this daemon has no other function than writing to this device 
      * i.e. if there is no device given we better punt */
     if ( devname == NULL )
-	terminate();
+	terminate();	//-如果是无效的就中止程序
 
     /* open the device */
-    watchdog = open(devname, O_WRONLY);
+    watchdog = open(devname, O_WRONLY);	//-打开看门狗设备
     if ( watchdog == -1 ) {
 #if USE_SYSLOG
             syslog(LOG_ERR, "cannot open %s (errno = %d = '%m')", devname, errno);
@@ -363,7 +363,7 @@ int main(int argc, char *const argv[])
 #endif
 
     /* tuck my process id away */
-    fp = fopen(KA_PIDFILE, "w");
+    fp = fopen(KA_PIDFILE, "w");	//-收藏我的进程ID
     if ( fp != NULL ) {
         fprintf(fp, "%d\n", getpid());
         (void) fclose(fp);
@@ -403,16 +403,16 @@ int main(int argc, char *const argv[])
 #endif
 
     /* tell oom killer to not kill this process */
-    sprintf(filename_buf, "/proc/%d/oom_adj", getpid());
+    sprintf(filename_buf, "/proc/%d/oom_adj", getpid());	//-该机制会监控那些占用内存过大，尤其是瞬间很快消耗大量内存的进程，为了防止内存耗尽而内核会把该进程杀掉。
     fp = fopen(filename_buf, "w");
     if (fp != NULL) {
-        fprintf(fp, "-17\n");
+        fprintf(fp, "-17\n");	//--17表示禁止被kill掉。
         (void) fclose(fp);
     }
 
     /* main loop: update after <tint> seconds */
     while ( _running ) {
-        if ( write(watchdog, "\0", 1) < 0 ) {
+        if ( write(watchdog, "\0", 1) < 0 ) {	//-不停的喂狗
             int err = errno;
 #if USE_SYSLOG
 	    syslog(LOG_ERR, "write watchdog device gave error %d = '%m'!", err);

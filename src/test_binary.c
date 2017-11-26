@@ -1,4 +1,4 @@
-/* $Header: /cvsroot/watchdog/watchdog/src/test_binary.c,v 1.3 2006/09/12 09:17:01 meskes Exp $ */
+﻿/* $Header: /cvsroot/watchdog/watchdog/src/test_binary.c,v 1.3 2006/09/12 09:17:01 meskes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -27,7 +27,7 @@ struct process
 
 static struct process *process_head = NULL;
 
-static void add_process (pid_t pid)
+static void add_process (pid_t pid)	//-像增加了一个链表节点
 {
     struct process *node = (struct process *) malloc (sizeof (struct process));
     node->pid = pid;
@@ -36,7 +36,7 @@ static void add_process (pid_t pid)
     process_head = node;
 }
 
-static void remove_process (pid_t pid)
+static void remove_process (pid_t pid)	//-移除一个链表节点
 {
     struct process *last, *current;
     last = NULL;
@@ -55,7 +55,7 @@ static void remove_process (pid_t pid)
 }
 
 /* See if any test processes have exceeded the timeout */
-static int check_processes (time_t timeout)
+static int check_processes (time_t timeout)	//-判断是否超时
 {
     struct process *current;
     time_t now = time (NULL);
@@ -72,7 +72,7 @@ static int check_processes (time_t timeout)
 }
 
 /* execute test binary */
-int check_bin(char *tbinary, time_t timeout)
+int check_bin(char *tbinary, time_t timeout)	//-判断程序执行时间是否超时
 {
     pid_t child_pid;
     int result, res = 0;

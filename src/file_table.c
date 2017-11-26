@@ -1,4 +1,4 @@
-/* $Header: /cvsroot/watchdog/watchdog/src/file_table.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
+﻿/* $Header: /cvsroot/watchdog/watchdog/src/file_table.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -12,7 +12,7 @@
 #include "extern.h"
 #include "watch_err.h"
 
-int check_file_table(void)
+int check_file_table(void)	//-检查了一个特定的系统文件,然后做出相应的判断,这个可以保证系统可靠运行,但是特定系统要校验下文件是否存在
 {
     int fd;
 
@@ -26,7 +26,7 @@ int check_file_table(void)
 #if USE_SYSLOG
 	    syslog(LOG_ERR, "file table overflow detected!\n");
 #endif				/* USE_SYSLOG */
-	    return (ENFILE);
+	    return (ENFILE);	//-复位之前记录了系统日志
 	} else {
 #if USE_SYSLOG
 	    errno = err;

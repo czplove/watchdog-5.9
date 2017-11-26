@@ -1,4 +1,4 @@
-/* $Header: /cvsroot/watchdog/watchdog/src/temp.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
+﻿/* $Header: /cvsroot/watchdog/watchdog/src/temp.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -13,7 +13,7 @@
 #include <syslog.h>
 #endif
 
-int check_temp(void)
+int check_temp(void)	//-判断机器温度并记录系统日志
 {
     unsigned char temperature;
 #if USE_SYSLOG
@@ -27,7 +27,7 @@ int check_temp(void)
 	return (ENOERR);
 
     /* read the line (there is only one) */
-    if (read(temp, &temperature, sizeof(temperature)) < 0) {
+    if (read(temp, &temperature, sizeof(temperature)) < 0) {	//-读出温度设备的数值
 	int err = errno;
 
 #if USE_SYSLOG

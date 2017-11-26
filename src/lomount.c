@@ -1,9 +1,9 @@
-/* $Header: /cvsroot/watchdog/watchdog/src/lomount.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
+﻿/* $Header: /cvsroot/watchdog/watchdog/src/lomount.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
 
 /* Taken from Ted's losetup.c - Mitch <m.dsouza@mrc-apu.cam.ac.uk> */
 /* Added vfs mount options - aeb - 960223 */
 /* Removed lomount - aeb - 960224 */
-
+//-/proc/devices/中的设备是通过insmod加载到内核的，它可产生一个major供mknod作为 参数。
 #define PROC_DEVICES	"/proc/devices"
 
 /*
@@ -259,7 +259,7 @@ del_loop (const char *device)
 
 #else /* no LOOP_SET_FD defined */
 static void
-mutter(void) {
+mutter(void) {	//-这个挂载是在没有循环支持的情况下编译的。请重新编译。
   fprintf(stderr,
 	  "This mount was compiled without loop support. Please recompile.\n");
 }  

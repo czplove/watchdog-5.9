@@ -1,4 +1,4 @@
-/* $Header: /cvsroot/watchdog/watchdog/src/pidfile.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
+﻿/* $Header: /cvsroot/watchdog/watchdog/src/pidfile.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -18,7 +18,7 @@
 #include <syslog.h>
 #endif
 
-int check_pidfile(struct list *file)
+int check_pidfile(struct list *file)	//-杀死进程
 {
     int fd = open(file->name, O_RDONLY), pid;
     char buf[10];

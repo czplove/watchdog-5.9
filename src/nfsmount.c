@@ -1,4 +1,4 @@
-/* $Header: /cvsroot/watchdog/watchdog/src/nfsmount.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
+﻿/* $Header: /cvsroot/watchdog/watchdog/src/nfsmount.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
 
 /*
  * nfsmount.c -- Linux NFS mount
@@ -23,7 +23,7 @@
  * Wed Oct  1 23:55:28 1997: Dick Streefland <dick_streefland@tasking.com>
  * Implemented the "bg", "fg" and "retry" mount options for NFS.
  *
- * 1999-02-22 Arkadiusz Mi�kiewicz <misiek@misiek.eu.org>
+ * 1999-02-22 Arkadiusz Mi秌iewicz <misiek@misiek.eu.org>
  * - added Native Language Support
  * 
  * Modified by Olaf Kirch and Trond Myklebust for new NFS code,

@@ -1,4 +1,4 @@
-/* $Header: /cvsroot/watchdog/watchdog/src/net.c,v 1.3 2007/01/08 12:01:58 meskes Exp $ */
+﻿/* $Header: /cvsroot/watchdog/watchdog/src/net.c,v 1.3 2007/01/08 12:01:58 meskes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -30,7 +30,7 @@ static int in_cksum(unsigned short *addr, int len)
        * sequential 16 bit words to it, and at the end, fold back all the
        * carry bits from the top 16 bits into the lower 16 bits.
      */
-    while (nleft > 1) {
+    while (nleft > 1) {	//-累加和
 	sum += *w++;
 	nleft -= 2;
     }				/* mop up an odd byte, if necessary */
@@ -45,7 +45,7 @@ static int in_cksum(unsigned short *addr, int len)
     return (answer);
 }
 
-int check_net(char *target, int sock_fp, struct sockaddr to, unsigned char *packet, int time, int count)
+int check_net(char *target, int sock_fp, struct sockaddr to, unsigned char *packet, int time, int count)	//-网络监测
 {
     int i;
     unsigned char outpack[MAXPACKET];

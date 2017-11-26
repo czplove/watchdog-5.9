@@ -1,4 +1,4 @@
-/* $Header: /cvsroot/watchdog/watchdog/src/mntent.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
+﻿/* $Header: /cvsroot/watchdog/watchdog/src/mntent.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
 
 /* Private version of the libc *mntent() routines. */
 /* Note slightly different prototypes. */
@@ -47,25 +47,25 @@ mangle(const char *s) {
 }
 
 static int
-is_space_or_tab (char c) {
+is_space_or_tab (char c) {	//-判断是否是空格或者tab符
 	return (c == ' ' || c == '\t');
 }
 
 static char *
-skip_spaces(char *s) {
+skip_spaces(char *s) {	//-跳过空格
 	while (is_space_or_tab(*s))
 		s++;
 	return s;
 }
 
 static char *
-skip_nonspaces(char *s) {
+skip_nonspaces(char *s) {	//-跳过不是空格
 	while (*s && !is_space_or_tab(*s))
 		s++;
 	return s;
 }
 
-#define isoctal(a) (((a) & ~7) == '0')
+#define isoctal(a) (((a) & ~7) == '0')	//-判断是否是八进制数
 
 /* returns malloced pointer - no more strdup required */
 static char *

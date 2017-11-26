@@ -1,4 +1,4 @@
-/* $Header: /cvsroot/watchdog/watchdog/src/file_stat.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
+﻿/* $Header: /cvsroot/watchdog/watchdog/src/file_stat.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -14,22 +14,22 @@
 #include <syslog.h>
 #endif
 
-int check_file_stat(struct list *file)
+int check_file_stat(struct list *file)	//-检查文件状态,产生相应的系统记录
 {
     struct stat buf;
 
     /* in filemode stat file */
-    if (stat(file->name, &buf) == -1) {
+    if (stat(file->name, &buf) == -1) {	//- 通过文件名filename获取文件信息，并保存在buf所指的结构体stat中; 执行成功则返回0，失败返回-1，错误代码存于errno
 	int err = errno;
 
 #if USE_SYSLOG
-	syslog(LOG_ERR, "cannot stat %s (errno = %d = '%m')", file->name, err);
+	syslog(LOG_ERR, "cannot stat %s (errno = %d = '%m')", file->name, err);	//-记录至系统记录。
 #else				/* USE_SYSLOG */
 	perror(progname);
 #endif				/* USE_SYSLOG */
 	/* on error ENETDOWN|ENETUNREACH we react as if we're in ping mode */
 	if (softboot || err == ENETDOWN || err == ENETUNREACH)
-	    return (err);
+	    return (err);	//-特定的错误我们做出反应
     } else if (file->parameter.file.mtime != 0) {
 
 #if USE_SYSLOG

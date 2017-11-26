@@ -1,4 +1,4 @@
-/* $Header: /cvsroot/watchdog/watchdog/src/fstab.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
+﻿/* $Header: /cvsroot/watchdog/watchdog/src/fstab.c,v 1.2 2006/07/31 09:39:23 meskes Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -15,9 +15,9 @@
 #include "sundries.h"		/* for xmalloc() etc */
 
 
-#define streq(s, t)	(strcmp ((s), (t)) == 0)
+#define streq(s, t)	(strcmp ((s), (t)) == 0)	//-两个字符串相等返回1
 
-#define PROC_MOUNTS		"/proc/mounts"
+#define PROC_MOUNTS		"/proc/mounts"	//-系统文件
 
 
 /* Information about mtab. ------------------------------------*/
@@ -30,11 +30,11 @@ get_mtab_info(void) {
      struct stat mtab_stat;
 
      if (!have_mtab_info) {
-	  if (lstat(MOUNTED, &mtab_stat))
+	  if (lstat(MOUNTED, &mtab_stat))	//-获取一些文件相关的信息
 	       var_mtab_does_not_exist = 1;
-	  else if (S_ISLNK(mtab_stat.st_mode))
+	  else if (S_ISLNK(mtab_stat.st_mode))	//-是否是一个连接
 	       var_mtab_is_a_symlink = 1;
-	  have_mtab_info = 1;
+	  have_mtab_info = 1;	//-仅仅调用一次
      }
 }
 
@@ -45,7 +45,7 @@ mtab_does_not_exist(void) {
 }
 
 int
-mtab_is_a_symlink(void) {
+mtab_is_a_symlink(void) {	//-是否是一个连接
      get_mtab_info();
      return var_mtab_is_a_symlink;
 }
@@ -261,14 +261,14 @@ lock_mtab (void) {
 	  struct stat st;
 	  sa.sa_handler = handler;
 	  sa.sa_flags = 0;
-	  sigfillset (&sa.sa_mask);
+	  sigfillset (&sa.sa_mask);	//-将参数set信号集初始化，然后把所有的信号加入到此信号集里即将所有的信号标志位置为1，屏蔽所有的信号。
   
-	  while (sigismember (&sa.sa_mask, ++sig) != -1 && sig != SIGCHLD) {
+	  while (sigismember (&sa.sa_mask, ++sig) != -1 && sig != SIGCHLD) {	//-测试参数signum 代表的信号是否已加入至参数set 信号集里. 如果信号集里已有该信号则返回1, 否则返回0.
 	       if (sig == SIGALRM)
 		    sa.sa_handler = setlkw_timeout;
 	       else
 		    sa.sa_handler = handler;
-	       sigaction (sig, &sa, (struct sigaction *) 0);
+	       sigaction (sig, &sa, (struct sigaction *) 0);	//-设置信号处理函数
 	  }
 
 	  /* This stat is performed so we know when not to be overly eager
@@ -289,7 +289,7 @@ lock_mtab (void) {
 	  flock.l_start = 0;
 	  flock.l_len = 0;
 
-	  alarm(LOCK_TIMEOUT);
+	  alarm(LOCK_TIMEOUT);	//-在进程中设置一个定时器，当定时器指定的时间到时，它向进程发送SIGALRM信号。
 	  if (fcntl (lock, F_SETLKW, &flock) == -1) {
 	       int errnosv = errno;
 
@@ -323,7 +323,7 @@ unlock_mtab (void) {
  *    where there was no entry before, and we'll have to believe
  *    the values given in INSTEAD.]
  */
-
+//-/etc/mtab或者/etc/fstab文件
 void
 update_mtab (const char *dir, struct mntent *instead) {
      struct mntent *mnt;
@@ -332,12 +332,12 @@ update_mtab (const char *dir, struct mntent *instead) {
      int added = 0;
      mntFILE *mfp, *mftmp;
 
-     if (mtab_does_not_exist() || mtab_is_a_symlink())
+     if (mtab_does_not_exist() || mtab_is_a_symlink())	//-成功获取到相关信息才继续处理
 	  return;
 
      lock_mtab();
 
-     mfp = my_setmntent(MOUNTED, "r");
+     mfp = my_setmntent(MOUNTED, "r");	//-open file for describing the mounted filesystems
      if (mfp == NULL || mfp->mntent_fp == NULL) {
 	  error ("cannot open %s (%s) - mtab not updated",
 		 MOUNTED, strerror (errno));
@@ -351,7 +351,7 @@ update_mtab (const char *dir, struct mntent *instead) {
 	  goto leave;
      }
   
-     while ((mnt = my_getmntent (mfp))) {
+     while ((mnt = my_getmntent (mfp))) {	//-可以直接获取一行的数据
 	  if (streq (mnt->mnt_dir, dir)) {
 	       added++;
 	       if (instead) {	/* a remount */
@@ -380,7 +380,7 @@ update_mtab (const char *dir, struct mntent *instead) {
 	  die (EX_FILEIO, "error writing %s: %s",
 	       MOUNTED_TEMP, strerror (errno));
 
-     my_endmntent (mfp);
+     my_endmntent (mfp);	//-close file for describing the mounted filesystems
      if (fchmod (fileno (mftmp->mntent_fp), S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH) < 0)
 	  fprintf(stderr, "error changing mode of %s: %s\n", MOUNTED_TEMP,
 		  strerror (errno));
