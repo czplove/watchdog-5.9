@@ -21,7 +21,7 @@
 #include <libgen.h>
 #include <getopt.h>
 
-#define DEVICE		"watchdog-device"
+#define DEVICE		"watchdog-device"	//-设备名,可以在配置文件里面获取到这个参数值
 
 int watchdog = -1;
 char *devname = NULL, *progname = NULL;
@@ -87,7 +87,7 @@ static void read_config(char *configfile, char *progname)	//-读指定配置文�
             for ( i = 0; line[i] == ' ' || line[i] == '\t'; i++ );
 
             /* if the next sign is a '#' we have a comment */
-            if ( line[i] == '#' )
+            if ( line[i] == '#' )	//-跳过注释
                 continue;
 
             /* also remove the trailing blanks and the \n */
@@ -95,7 +95,7 @@ static void read_config(char *configfile, char *progname)	//-读指定配置文�
             line[j + 1] = '\0';
 
             /* if the line is empty now, we don't have to parse it */
-            if ( strlen(line + i) == 0 )
+            if ( strlen(line + i) == 0 )	//-跳过空行
                 continue;
 
             /* now check for an option */
@@ -122,7 +122,7 @@ static void read_config(char *configfile, char *progname)	//-读指定配置文�
     }
 }
 
-
+//- ./wd_identify
 int main(int argc, char *const argv[])	//-主要根据配置文件识别了看门狗,并没有实际周期操作
 {
     FILE *fp;
@@ -134,7 +134,7 @@ int main(int argc, char *const argv[])	//-主要根据配置文件识别了看�
     char *opts = "c:";
     struct option long_options[] =
     {
-	{"config-file", required_argument, NULL, 'c'},
+	{"config-file", required_argument, NULL, 'c'},	//-长参数名 表示参数后面是否跟数值 用来决定，getopt_long()的返回值到底是什么 /和flag联合决定返回值
 	{NULL, 0, NULL, 0}
     };
 
@@ -157,7 +157,7 @@ int main(int argc, char *const argv[])	//-主要根据配置文件识别了看�
 
     /* this program has no other function than iidentifying the hardware behind
      * this device i.e. if there is no device given we better punt */
-    if ( devname == NULL )
+    if ( devname == NULL )	//-这个数值是在读配置文件的时候获取的记得需要free否则内存泄漏
 	exit(0);
 
     /* open the device */
@@ -179,7 +179,7 @@ int main(int argc, char *const argv[])	//-主要根据配置文件识别了看�
     if (write(watchdog, "V", 1) < 0 )	//-关闭看门狗
 	perror(progname);
 
-    if (close(watchdog) == -1)
+    if (close(watchdog) == -1)	//-关闭文件
 	perror(progname);
 
     exit(0);
