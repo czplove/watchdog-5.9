@@ -94,7 +94,8 @@ int check_pidfile(struct list *file)	//-杀死进程
 
         return (ENOERR);
     }
-
+    //-kill 参数sig：准备发送的信号代码，假如其值为零则没有任何信号送出，但是系统会执行错误检查，通常会利用sig值为零
+    //-来检验某个进程是否仍在执行。
     if (kill (pid, 0) == -1) {
 	int err = errno;
 	

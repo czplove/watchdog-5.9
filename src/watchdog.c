@@ -895,13 +895,13 @@ int main(int argc, char *const argv[])
 
     /* main loop: update after <tint> seconds */
     while (_running) {
-	wd_action(keep_alive(), rbinary, NULL);
+	wd_action(keep_alive(), rbinary, NULL);	//-周期喂狗,如果出错进行可能的修复处理
 
 	/* sync system if we have to */
-	do_check(sync_system(sync_it), rbinary, NULL);
+	do_check(sync_system(sync_it), rbinary, NULL);	//-每次这个处理的时候都进行一次喂狗操作
 
 	/* check file table */
-	do_check(check_file_table(), rbinary, NULL);
+	do_check(check_file_table(), rbinary, NULL);	//-默认做的不要配置
 
 	/* check load average */
 	do_check(check_load(), rbinary, NULL);
