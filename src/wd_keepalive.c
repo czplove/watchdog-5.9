@@ -374,9 +374,9 @@ int main(int argc, char *const argv[])	//-这个里面会周期喂狗
     signal(SIGTERM, sigterm_handler);
 
 #if defined(_POSIX_MEMLOCK)
-    if ( realtime == TRUE ) {
+    if ( realtime == TRUE ) {	//-有些对时间敏感的应用会希望全部使用物理内存，以提高数据访问和操作的效率。
         /* lock all actual and future pages into memory */
-        if ( mlockall(MCL_CURRENT | MCL_FUTURE) != 0 ) {
+        if ( mlockall(MCL_CURRENT | MCL_FUTURE) != 0 ) {	//-将进程使用的部分或者全部的地址空间锁定在物理内存中，防止其被交换到swap空间。
 #if USE_SYSLOG
 		syslog(LOG_ERR, "cannot lock realtime memory (errno = %d = '%m')", errno);
 #else                           /* USE_SYSLOG */
@@ -389,7 +389,7 @@ int main(int argc, char *const argv[])	//-这个里面会周期喂狗
 
             /* now set the scheduler */
             sp.sched_priority = schedprio;
-            if ( sched_setscheduler(0, SCHED_RR, &sp) != 0 ) {
+            if ( sched_setscheduler(0, SCHED_RR, &sp) != 0 ) {	//-设置调度策略
 #if USE_SYSLOG
 		syslog(LOG_ERR, "cannot set scheduler (errno = %d = '%m')", errno);
 #else                           /* USE_SYSLOG */
