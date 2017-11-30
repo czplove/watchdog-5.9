@@ -778,7 +778,7 @@ int main(int argc, char *const argv[])
             /* Allocate  memory for keeping the timestamps in */
             nrts = 0;
             lastts = 0;
-            timestamps = (char *) calloc(hbstamps, TS_SIZE);
+            timestamps = (char *) calloc(hbstamps, TS_SIZE);	//-在内存的动态存储区中分配n个长度为size的连续空间，函数返回一个指向分配起始地址的指针
             if ( timestamps == NULL ) {
 #if USE_SYSLOG
                 syslog(LOG_ERR, "cannot allocate memory for timestamps (errno = %d = '%m')", errno);
@@ -788,24 +788,24 @@ int main(int argc, char *const argv[])
             }
             else {           
                 /* read any previous timestamps */
-                rewind(hb);
-                while ( fgets(rbuf, TS_SIZE + 1, hb) != NULL ) {
+                rewind(hb);	//-文件重新定位到开头，以便后续操作
+                while ( fgets(rbuf, TS_SIZE + 1, hb) != NULL ) {	//-获取一个时间戳
                     memcpy(timestamps + (TS_SIZE * lastts), rbuf, TS_SIZE);
-                    if (nrts < hbstamps) 
+                    if (nrts < hbstamps) //-后面代表时间戳的总个数
                         nrts++;
-                    ++lastts;
+                    ++lastts;	//-指向一个空闲位置的量
                     lastts = lastts % hbstamps;
                 }
                 /* Write an indication that the watchdog has started to the heartbeat file */
                 /* copy it to the buffer */
                 sprintf(rbuf, "%*s\n", TS_SIZE - 1, "--restart--");
-                memcpy(timestamps + (lastts * TS_SIZE), rbuf, TS_SIZE);
+                memcpy(timestamps + (lastts * TS_SIZE), rbuf, TS_SIZE);	//-上面首先获取到了上次文件中的信息,这里是增加新的信息
 
                 // success
                 if (nrts < hbstamps) 
                     nrts++;
                 ++lastts;
-                lastts = lastts % hbstamps;
+                lastts = lastts % hbstamps;	//-但是到目前为止这些信息还在内存中,没有存储到文件中形成永久记录
 
             }
         }

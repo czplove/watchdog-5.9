@@ -68,7 +68,7 @@ int write_heartbeat(void)
         }
         else {        
             // write from the physical start of the buffer to the logical end
-            if (fwrite(timestamps, TS_SIZE, nrts, hb) == 0) {
+            if (fwrite(timestamps, TS_SIZE, nrts, hb) == 0) {	//-向指定的文件中写入若干数据块
 		    int err = errno;
 #if USE_SYSLOG
 		    syslog(LOG_ERR, "write heartbeat file gave error %d = '%m'!", err);
